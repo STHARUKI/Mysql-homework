@@ -1,0 +1,126 @@
+﻿<Window x:Class="Mysql1.Search"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Mysql1"
+        mc:Ignorable="d"
+        Title="Search" Height="450" Width="800" Closing="Window_Closing">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="4*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Content="服装类查询" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Label Grid.Column="2" Grid.Row="1" Content="商品ID" FontSize="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Label Grid.Column="3" Grid.Row="1" Content="商品名称" FontSize="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Label Grid.Column="4" Grid.Row="1" Content="品牌" FontSize="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Label Grid.Column="5" Grid.Row="1" Content="颜色" FontSize="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Label Grid.Column="6" Grid.Row="1" Content="尺寸" FontSize="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Label Grid.Column="7" Grid.Row="1" Content="适合人群" FontSize="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Label Grid.Column="8" Grid.Row="1" Content="价格" FontSize="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Label Grid.Column="9" Grid.Row="1" Content="库存" FontSize="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Button x:Name="clothsearchbutton" Grid.Column="10" Grid.Row="1" Grid.RowSpan="2" Content="查询" Width="50" Height="50" FontSize="15" Click="clothsearchbutton_Click"/>
+                <TextBox x:Name="searchclothid" Grid.Column="2" Grid.Row="2"/>
+                <TextBox x:Name="searchclothname" Grid.Column="3" Grid.Row="2"/>
+                <TextBox x:Name="searchclothbrand" Grid.Column="4" Grid.Row="2"/>
+                <TextBox x:Name="searchclothcolor" Grid.Column="5" Grid.Row="2"/>
+                <TextBox x:Name="searchclothsize" Grid.Column="6" Grid.Row="2"/>
+                <TextBox x:Name="searchclothcrowd" Grid.Column="7" Grid.Row="2"/>
+                <TextBox x:Name="searchclothprize" Grid.Column="8" Grid.Row="2"/>
+                <TextBox x:Name="searchclothnumber" Grid.Column="9" Grid.Row="2"/>
+            </Grid>
+            <DataGrid x:Name="searchCloth" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="商品ID" Binding="{Binding Path=cid,Mode=TwoWay}" Width="95"/>
+                    <DataGridTextColumn Header="商品名称" Binding="{Binding Path=name,Mode=TwoWay}" Width="95"/>
+                    <DataGridTextColumn Header="品牌" Binding="{Binding Path=brand,Mode=TwoWay}" Width="95"/>
+                    <DataGridTextColumn Header="颜色" Binding="{Binding Path=color,Mode=TwoWay}" Width="95"/>
+                    <DataGridTextColumn Header="尺寸" Binding="{Binding Path=size,Mode=TwoWay}" Width="95"/>
+                    <DataGridTextColumn Header="适合人群" Binding="{Binding Path=crowd,Mode=TwoWay}" Width="95"/>
+                    <DataGridTextColumn Header="价格" Binding="{Binding Path=prize, Mode=TwoWay}" Width="95"/>
+                    <DataGridTextColumn Header="库存" Binding="{Binding Path=number,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="95" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="4*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Content="食品类查询" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Label Grid.Column="2" Grid.Row="1" Content="商品ID" FontSize="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Label Grid.Column="3" Grid.Row="1" Content="商品名称" FontSize="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Label Grid.Column="4" Grid.Row="1" Content="品牌" FontSize="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Label Grid.Column="5" Grid.Row="1" Content="保质期" FontSize="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Label Grid.Column="6" Grid.Row="1" Content="产地" FontSize="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Label Grid.Column="7" Grid.Row="1" Content="价格" FontSize="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Label Grid.Column="8" Grid.Row="1" Content="库存" FontSize="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Button x:Name="foodsearchbutton" Grid.Column="9" Grid.Row="1" Grid.RowSpan="2" Content="查询" Width="50" Height="50" FontSize="15" Click="foodsearchbutton_Click"/>
+                <TextBox x:Name="searchfoodid" Grid.Column="2" Grid.Row="2"/>
+                <TextBox x:Name="searchfoodname" Grid.Column="3" Grid.Row="2"/>
+                <TextBox x:Name="searchfoodbrand" Grid.Column="4" Grid.Row="2"/>
+                <TextBox x:Name="searchfooddate" Grid.Column="5" Grid.Row="2"/>
+                <TextBox x:Name="searchfoodplace" Grid.Column="6" Grid.Row="2"/>
+                <TextBox x:Name="searchfoodprize" Grid.Column="7" Grid.Row="2"/>
+                <TextBox x:Name="searchfoodnumber" Grid.Column="8" Grid.Row="2"/>
+            </Grid>
+            <DataGrid x:Name="searchFood" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="商品ID" Binding="{Binding Path=fid,Mode=TwoWay}" Width="95"/>
+                    <DataGridTextColumn Header="商品名称" Binding="{Binding Path=name,Mode=TwoWay}" Width="95"/>
+                    <DataGridTextColumn Header="品牌" Binding="{Binding Path=brand,Mode=TwoWay}" Width="95"/>
+                    <DataGridTextColumn Header="保质期" Binding="{Binding Path=exDate,Mode=TwoWay}" Width="200"/>
+                    <DataGridTextColumn Header="产地" Binding="{Binding Path=place,Mode=TwoWay}" Width="95"/>
+                    <DataGridTextColumn Header="价格" Binding="{Binding Path=prize, Mode=TwoWay}" Width="95"/>
+                    <DataGridTextColumn Header="库存" Binding="{Binding Path=number,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="95" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</Window>

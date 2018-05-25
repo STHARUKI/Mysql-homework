@@ -1,0 +1,44 @@
+﻿<Window x:Class="Mysql1.Food"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Mysql1"
+        mc:Ignorable="d"
+        Title="Food" Height="450" Width="800" Closing="Window_Closing">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="1.5*" />
+            <RowDefinition Height="8*" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        <Label x:Name="foodLabel" Grid.Row="1" Grid.Column="1" Content="食品类商品购买" FontSize="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <DataGrid x:Name="clothDataGrid" Grid.Column="1" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="商品ID" Binding="{Binding Path=fid,Mode=TwoWay}" Width="100"/>
+                <DataGridTextColumn Header="商品名称" Binding="{Binding Path=name,Mode=TwoWay}" Width="100"/>
+                <DataGridTextColumn Header="品牌" Binding="{Binding Path=brand,Mode=TwoWay}" Width="100"/>
+                <DataGridTextColumn Header="产地" Binding="{Binding Path=place,Mode=TwoWay}" Width="100"/>
+                <DataGridTextColumn Header="价格" Binding="{Binding Path=prize, Mode=TwoWay}" Width="100"/>
+                <DataGridTextColumn Header="库存" Binding="{Binding Path=number,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="100" />
+                <DataGridTextColumn Header="过期时间" Binding="{Binding Path=exDate,Mode=TwoWay}" Width="160"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="0.5*"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="2" Content="请输入想要购买的件数：" FontSize="20"/>
+            <TextBox Grid.Column="3" x:Name="foodnumber"/>
+            <Button x:Name="foodbutton" Grid.Column="4" Content="确认" FontSize="18" Height="30" Width="130" Click="clothbutton_Click"/>
+        </Grid>
+
+
+    </Grid>
+</Window>
