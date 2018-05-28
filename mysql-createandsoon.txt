@@ -1,0 +1,147 @@
+CREATE DATABASE shop;
+
+CREATE TABLE goods(
+gid CHAR(10) PRIMARY KEY,
+name CHAR(10),
+brand CHAR(10),
+prize DOUBLE(8,2)
+);
+
+CREATE TABLE clothGoods(
+cid CHAR(10) PRIMARY KEY,
+name CHAR(10),
+brand CHAR(10),
+color CHAR(10),
+size CHAR(10),
+crowd CHAR(10),
+prize DOUBLE(8,2),
+number INT,
+FOREIGN KEY(cid) REFERENCES goods(gid) ON DELETE CASCADE);
+
+CREATE TABLE  foodGoods(
+fid CHAR(10) PRIMARY KEY,
+name CHAR(10),
+brand CHAR(10),
+exDate Date,
+place CHAR(10),
+prize DOUBLE(8,2),
+number INT,
+FOREIGN KEY(fid) REFERENCES goods(gid) ON DELETE CASCADE);
+
+CREATE TABLE salesRecord(
+sales_date DATETIME,
+gid CHAR(10),
+name CHAR(10),
+brand CHAR(10),
+number INT,
+prize DOUBLE(8,2),
+total_prize DOUBLE(8,2),
+FOREIGN KEY(gid) REFERENCES goods(gid) ON DELETE CASCADE);
+
+CREATE TABLE stockRecord(
+stock_date DATETIME,
+gid CHAR(10),
+number INT,
+prize DOUBLE(8,2),
+total_prize DOUBLE(8,2),
+FOREIGN KEY(gid) REFERENCES goods(gid) ON DELETE CASCADE);
+
+# 下架表
+
+CREATE TABLE soldout(
+soldoutData DATETIME,
+soldoutReason CHAR(10),
+gid CHAR(10),
+name CHAR(10),
+brand CHAR(10),
+prize DOUBLE(8,2),
+PRIMARY KEY(gid));
+
+#创建视图
+CREATE VIEW statistics(产品名称,产品ID,销售总量,金额,销售总金额)
+AS
+SELECT name, gid, SUM(number) as sumnumber, prize, SUM(number)*prize as sumprize 
+FROM salesRecord
+GROUP BY gid;
+
+CREATE VIEW statisticsBrand(品牌名称,销售总金额)
+AS
+SELECT brand,SUM(total_prize) as sumprize
+FROM salesRecord
+GROUP BY brand;
+
+#触发器1：设置库存低于5时，进货
+
+DELIMITER $
+CREATE TRIGGER stock_cloth
+BEFORE UPDATE ON clothGoods
+FOR EACH ROW 
+BEGIN
+INSERT INTO salesRecord VALUES(NOW(), old.cid, old.name, old.brand, (CASE WHEN old.number > new.number THEN old.number - new.number ELSE 0 END), old.prize, (old.number - new.number)*old.prize);
+DELETE FROM salesRecord WHERE number = 0;
+INSERT INTO stockRecord VALUES (NOW(),old.cid, (CASE WHEN new.number < 5 THEN 15-new.number ELSE 0 END), new.prize, new.prize*(15-new.number));
+DELETE FROM stockRecord WHERE number = 0;
+SET new.number = (CASE WHEN new.number < 5 THEN 15 ELSE new.number END);
+END$
+DELIMITER ;
+
+DELIMITER $
+CREATE TRIGGER stock_food
+BEFORE UPDATE ON foodGoods
+FOR EACH ROW 
+BEGIN
+INSERT INTO salesRecord VALUES(NOW(), old.fid, old.name, old.brand, (CASE WHEN old.number > new.number THEN old.number - new.number ELSE 0 END), old.prize, (old.number - new.number)*old.prize);
+DELETE FROM salesRecord WHERE number = NULL;
+INSERT INTO stockRecord VALUES (NOW(),old.fid, (CASE WHEN new.number < 5 THEN 15-new.number ELSE 0 END), new.prize, new.prize*(15-new.number));
+DELETE FROM stockRecord WHERE number = 0;
+SET new.number = (CASE WHEN new.number < 5 THEN 15 ELSE new.number END);
+END$
+DELIMITER ;
+
+#
+
+DELIMITER $
+CREATE TRIGGER soldoutTrigger
+AFTER INSERT ON soldout
+FOR EACH ROW
+BEGIN
+DELETE FROM goods WHERE gid = new.gid;
+END $
+DELIMITER ;
+
+
+#触发器3：购买后，自动增加销售记录
+
+DELIMITER $
+CREATE TRIGGER clothSales
+AFTER UPDATE ON clothGoods
+FOR EACH ROW
+BEGIN
+INSERT INTO salesRecord VALUES(NOW(), old.cid, old.name, old.brand,(CASE WHEN old.number < new.number THEN old.number - new.number ELSE -1 END) , old.prize, (CASE WHEN old.number < new.number THEN old.number - new.number ELSE NULL END)*old.prize);
+DELETE FROM salesRecord WHERE number < 0;
+END$
+DELIMITER ;
+
+DELIMITER $
+CREATE TRIGGER foodSales
+AFTER UPDATE ON foodGoods
+FOR EACH ROW
+BEGIN
+INSERT INTO salesRecord VALUES(NOW(), old.fid, old.name, old.brand,(CASE WHEN old.number < new.number THEN old.number - new.number ELSE -1 END) , old.prize, (CASE WHEN old.number < new.number THEN old.number - new.number ELSE NULL END)*old.prize);
+DELETE FROM salesRecord WHERE number < 0;
+END$
+DELIMITER ;
+
+
+#事件调度器1：每天统计库存量，如果库存量小于10，进行采购（使每种库存量小于10的商品库存量增大为25）
+DELIMITER $
+CREATE EVENT stock_everyday
+ON SCHEDULE EVERY 1 DAY
+DO 
+BEGIN
+INSERT INTO stockRecord(stock_date, gid, number, prize, total_prize) SELECT NOW(),cid,25-number,prize,(25-number)*prize FROM clothGoods WHERE number < 10;
+INSERT INTO stockRecord(stock_date, gid, number, prize, total_prize) SELECT NOW(),fid,25-number,prize,(25-number)*prize FROM foodGoods WHERE number < 10;
+UPDATE clothGoods SET number = 25 WHERE number < 10;
+UPDATE foodGoods SET number = 25 WHERE number < 10;
+END$
+DELIMITER ;
