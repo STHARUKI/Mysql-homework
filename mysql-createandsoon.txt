@@ -98,19 +98,7 @@ SET new.number = (CASE WHEN new.number < 5 THEN 15 ELSE new.number END);
 END$
 DELIMITER ;
 
-#
-
-DELIMITER $
-CREATE TRIGGER soldoutTrigger
-AFTER INSERT ON soldout
-FOR EACH ROW
-BEGIN
-DELETE FROM goods WHERE gid = new.gid;
-END $
-DELIMITER ;
-
-
-#触发器3：购买后，自动增加销售记录
+#触发器2：购买后，自动增加销售记录
 
 DELIMITER $
 CREATE TRIGGER clothSales
