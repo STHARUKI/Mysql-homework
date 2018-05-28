@@ -26,5 +26,5 @@
 2. 直接在visual studio中打开解决方案，修改所有文件中的该条语句。
 
    ```
-   static MySqlConnection conn = new MySqlConnection("Database=shop;Data Source=localhost;User 						    Id=root;Password=***********;SslMode=none");
+   static MySqlConnection conn = new MySqlConnection("Database=shop;Data Source=localhost;UserId=root;Password=***********;SslMode=none");
    ```
